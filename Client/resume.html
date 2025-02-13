@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UpSkill Hub</title>
+  <link rel="stylesheet" href="app.css">
+</head>
+<body>
+  <!-- Navbar -->
+  <header>
+    <nav class="navbar">
+      <div class="logo">Upskill Hub</div>
+      <ul class="nav-links">
+        <li><a href="home.html">Home</a></li>
+        <li><a href="signin.html">Sign In</a></li>
+        <li><a href="signup.html">Sign Up</a></li>
+        <div class="dropdown1">
+          <button class="dropbtn1">Categories</button>
+          <div class="dropdown-content1">
+            <a href="profile.html">Profile</a>
+            <a href="resume.html">Find Skills</a>
+            <a href="app.html">Recommendation</a>
+            </div>
+          </button>
+        </div>
+      <li>
+
+        <div class="search-container">
+          <input type="text" placeholder="Search..." />
+          <button>Search</button>
+        </div>
+      </li>
+      </ul>
+    </nav>
+  </header>
+  <!-- Hero Section -->
+ 
+  <!-- Form Container -->
+  <div class="form-container">
+    <h2>Job Description & Resume Upload</h2>
+    <form id="uploadForm">
+      <label for="job_description">Job Description:</label>
+      <textarea id="job_description" rows="5" placeholder="Paste the job description here..."></textarea>
+
+      <label for="resume">Upload Resume (PDF):</label>
+      <input type="file" id="resume"  name="resume" accept=".pdf" required>
+
+      <button type="submit">Evaluate</button>
+
+    
+    </form>
+    <div id="result"></div>
+
+  </div>
+
+  <script>
+      document.getElementById("uploadForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+
+            let formData = new FormData();
+            let fileInput = document.getElementById("resume").files[0];
+            let jobDescription = document.getElementById("job_description").value.trim();
+
+            if (!fileInput || jobDescription === "") {
+                alert("Please upload a resume and enter job description.");
+                return;
+            }
+
+            formData.append("resume", fileInput);
+            formData.append("job_description", jobDescription);
+
+            fetch("http://localhost:5002/compare_skills", {
+                method: "POST",
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                let resultDiv = document.getElementById("result");
+                resultDiv.innerHTML = `
+                    
+                    <p><strong>Matched Skills:</strong> ${data.matched_skills.join(", ")}</p>
+                    <p><strong>Missing Skills:</strong> ${data.missing_skills.join(", ")}</p>
+                `;
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                document.getElementById("result").innerHTML = "<strong>Error:</strong> Could not send data.";
+            });
+        });
+
+        document.addEventListener("DOMContentLoaded", function () {
+  const dropdownBtn = document.querySelector(".dropbtn1");
+  const dropdownContent = document.querySelector(".dropdown-content1");
+
+  dropdownBtn.addEventListener("click", function (event) {
+    event.stopPropagation(); // Prevents click from closing immediately
+    dropdownContent.style.display =
+      dropdownContent.style.display === "block" ? "none" : "block";
+  });
+  function toggleDropdown() {
+  document.getElementById("dropdownMenu").classList.toggle("show");
+}
+
+  // Close dropdown when clicking outside
+  document.addEventListener("click", function (event) {
+    if (!dropdownBtn.contains(event.target) && !dropdownContent.contains(event.target)) {
+      dropdownContent.style.display = "none";
+    }
+  });
+});
+  </script>
+</body>
+</html>

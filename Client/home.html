@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Upskill Hub</title>
+  <link rel="stylesheet" href="app.css">
+</head>
+<body>
+  <header>
+    <nav class="navbar">
+      <div class="logo">Upskill Hub</div>
+      <ul class="nav-links">
+        <li><a href="home.html">Home</a></li>
+        <li><a href="signin.html">Sign In</a></li>
+        <li><a href="signup.html">Sign Up</a></li>
+        <div class="dropdown1">
+          <button class="dropbtn1">Categories</button>
+          <div class="dropdown-content1">
+            <a href="profile.html">Profile</a>
+            <a href="resume.html">Find Skills</a>
+            <a href="app.html">Recommendation</a>
+          </div>
+        </div>
+        <li>
+          <div class="search-container">
+            <input type="text" placeholder="Search..." />
+            <button>Search</button>
+          </div>
+        </li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <h1 style="color: white;">Empowering Your Skill Growth</h1>
+      <p>Join Upskill Hub and unlock new career opportunities.</p>
+      <div class="button-container">
+        <button class="cta-button" id="discoverRecommendations">
+          <a href="app.html" style="text-decoration: none;" class="restricted-link">Discover Recommendations</a>
+        </button>
+        <button class="cta-button" id="findSkills">
+          <a href="resume.html" style="text-decoration: none;" class="restricted-link">Find Skills</a>
+        </button>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const discoverRecommendationsBtn = document.getElementById("discoverRecommendations");
+      const findSkillsBtn = document.getElementById("findSkills");
+
+      // Function to check if the user is logged in
+      function isUserLoggedIn() {
+        const data = JSON.parse(localStorage.getItem("user"));
+        return !!data; // Returns true if data exists, false otherwise
+      }
+
+      // Event listener for "Discover Recommendations" button
+      discoverRecommendationsBtn.addEventListener("click", function (event) {
+        if (!isUserLoggedIn()) {
+          event.preventDefault(); // Prevent the default link behavior
+          alert("You need to log in to access this feature.Redirecting to sign-up page");
+          window.location.href = "signup.html"; // Redirect to sign-in page
+        }
+      });
+
+      // Event listener for "Find Skills" button
+      findSkillsBtn.addEventListener("click", function (event) {
+        if (!isUserLoggedIn()) {
+          event.preventDefault(); // Prevent the default link behavior
+          alert("You need to log in to access this feature.Redirecting to sign-up page");
+          window.location.href = "signup.html"; // Redirect to sign-in page
+        }
+      });
+
+      // Dropdown menu functionality
+      const dropdownBtn = document.querySelector(".dropbtn1");
+      const dropdownContent = document.querySelector(".dropdown-content1");
+
+      dropdownBtn.addEventListener("click", function (event) {
+        event.stopPropagation(); // Prevents click from closing immediately
+        dropdownContent.style.display =
+          dropdownContent.style.display === "block" ? "none" : "block";
+      });
+
+      // Close dropdown when clicking outside
+      document.addEventListener("click", function (event) {
+        if (!dropdownBtn.contains(event.target) && !dropdownContent.contains(event.target)) {
+          dropdownContent.style.display = "none";
+        }
+      });
+    });
+  </script>
+</body>
+</html>

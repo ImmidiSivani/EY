@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Profile - Upskill Hub</title>
+  <link rel="stylesheet" href="app.css">
+  <link rel="stylesheet" href="feedback.css"> <!-- Link to the feedback CSS file -->
+</head>
+<body>
+  <header>
+    <nav class="navbar">
+      <div class="logo">Upskill Hub</div>
+      <ul class="nav-links">
+        <li><a href="home.html">Home</a></li>
+        <li><a href="signin.html">Sign In</a></li>
+        <li><a href="signup.html">Sign Up</a></li>
+        <div class="dropdown1">
+          <button class="dropbtn1">Categories</button>
+          <div class="dropdown-content1">
+            <a href="profile.html">Profile</a>
+            <a href="resume.html">Find Skills</a>
+            <a href="app.html">Recommendation</a>
+          </div>
+        </div>
+        <li>
+          <div class="search-container">
+            <input type="text" placeholder="Search..." />
+            <button>Search</button>
+          </div>
+        </li>
+      </ul>
+    </nav>
+  </header>
+
+  <div class="profile-container">
+    <h2>User Profile</h2>
+    <p><strong>Name:</strong> <span id="user-name">Loading...</span></p>
+    <p><strong>Email:</strong> <span id="user-email">Loading...</span></p>
+    <button id="logout" class="signout-button">Sign Out</button>
+  </div>
+
+  <!-- Feedback Modal -->
+  <div id="feedback-modal" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <h2>We'd Love Your Feedback!</h2>
+      <form id="feedback-form">
+        <label for="feedback">Tell us how we can improve:</label>
+        <textarea id="feedback" name="feedback" rows="5" required></textarea>
+        <button type="submit">Submit Feedback</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const data = JSON.parse(localStorage.getItem("user"));
+      if (data) {
+        document.getElementById("user-name").textContent = data.name;
+        document.getElementById("user-email").textContent = data.email;
+      } else {
+        alert("You are not logged in. Redirecting to Sign In...");
+        window.location.href = "signin.html";
+      }
+
+      // Get the modal and buttons
+      const modal = document.getElementById("feedback-modal");
+      const logoutBtn = document.getElementById("logout");
+      const closeBtn = document.querySelector(".close");
+
+      // Open modal when Sign Out is clicked
+      logoutBtn.addEventListener("click", function (e) {
+        e.preventDefault();
+        modal.style.display = "block";
+      });
+
+      // Close modal when the close button is clicked
+      closeBtn.addEventListener("click", function () {
+        modal.style.display = "none";
+      });
+
+      // Close modal when clicking outside the modal
+      window.addEventListener("click", function (event) {
+        if (event.target === modal) {
+          modal.style.display = "none";
+        }
+      });
+
+      // Handle feedback form submission
+      document.getElementById("feedback-form").addEventListener("submit", function (e) {
+        e.preventDefault();
+        const feedback = document.getElementById("feedback").value;
+        console.log("Feedback submitted:", feedback); // You can send this feedback to a server
+        localStorage.removeItem("user"); // Clear the user session
+        window.location.href = "home.html"; // Redirect to home page
+      });
+    });
+
+    // Dropdown menu functionality
+    document.addEventListener("DOMContentLoaded", function () {
+      const dropdownBtn = document.querySelector(".dropbtn1");
+      const dropdownContent = document.querySelector(".dropdown-content1");
+
+      dropdownBtn.addEventListener("click", function (event) {
+        event.stopPropagation();
+        dropdownContent.style.display =
+          dropdownContent.style.display === "block" ? "none" : "block";
+      });
+
+      // Close dropdown when clicking outside
+      document.addEventListener("click", function (event) {
+        if (!dropdownBtn.contains(event.target) && !dropdownContent.contains(event.target)) {
+          dropdownContent.style.display = "none";
+        }
+      });
+    });
+  </script>
+</body>
+</html>
