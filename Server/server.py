@@ -184,6 +184,7 @@ def compare_skills():
     job_skills = extract_matching_skills(job_description, skills_columns)
 
     # Find missing skills
+    matched_skills = resume_skills & job_skills
     missing_skills = job_skills - resume_skills
 
     
@@ -192,7 +193,7 @@ def compare_skills():
         "message": "Resume processed successfully",
         "resume_filename": resume.filename,
         "job_description": job_description,
-        "matched_skills": list(resume_skills),
+        "matched_skills": list(matched_skills),
         "missing_skills": list(missing_skills),
         
     }
