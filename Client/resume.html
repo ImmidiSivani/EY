@@ -70,7 +70,7 @@
             formData.append("resume", fileInput);
             formData.append("job_description", jobDescription);
 
-            fetch("/compare_skills", {
+            fetch("https://ey-2-517h.onrender.com//compare_skills", {
                 method: "POST",
                 body: formData
             })

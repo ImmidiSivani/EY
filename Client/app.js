@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
   let allSkills = []; // This will hold the skills fetched from the backend
 
-  const baseUrl = "https://ey-1-0shs.onrender.com"; // Base URL for API
+  const baseUrl = "https://ey-2-517h.onrender.com/"; // Base URL for API
 
   // Fetch skills from the backend on page load
   fetchSkills();
