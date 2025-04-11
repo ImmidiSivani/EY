@@ -70,7 +70,7 @@
             formData.append("resume", fileInput);
             formData.append("job_description", jobDescription);
 
-            fetch("http://localhost:5002/compare_skills", {
+            fetch("/compare_skills", {
                 method: "POST",
                 body: formData
             })
