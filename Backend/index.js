@@ -14,9 +14,9 @@ require('./db'); // Ensure this file connects to MongoDB
 
 const PORT = process.env.PORT || 8000;
 
-app.use(express.static(path.join(__dirname, 'Client')));
+app.use(express.static(path.join(__dirname,'..' ,'Client')));
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'Client','signup.html'));
+  res.sendFile(path.join(__dirname,'..' ,'Client','signup.html'));
 });
 
 app.use('/', userRoutes);
