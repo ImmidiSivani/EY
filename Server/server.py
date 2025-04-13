@@ -9,7 +9,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 from flask_cors import CORS  # Import CORS
 
 app = Flask(__name__)
-CORS(app)
+CORS(app,origins=["https://ey-1-0shs.onrender.com"])
 
 # Initialize global variables
 __skills = None
