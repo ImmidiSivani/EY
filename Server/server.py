@@ -199,10 +199,9 @@ def compare_skills():
     }
 
     return jsonify(response), 200
-
+load_saved_skills()
 if __name__ == '__main__':
     # Load skills and course data from the JSON, pickle files, and CSV
-    load_saved_skills()
 
     # Run the Flask application
     app.run(debug=True, port=5002)
