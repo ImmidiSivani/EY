@@ -7,9 +7,10 @@ import os
 from flask import Flask, request, jsonify
 from sklearn.metrics.pairwise import cosine_similarity
 from flask_cors import CORS  # Import CORS
+from pathlib import Path
 
 app = Flask(__name__)
-CORS(app,origins=["http://localhost:3000","https://ey-1-0shs.onrender.com"])
+CORS(app,origins=["https://ey-1-0shs.onrender.com"])
 
 # Initialize global variables
 __skills = None
@@ -80,8 +81,10 @@ def load_saved_skills():
         print(f"Error loading vectorizer pickle file: {e}")
 
     # Load course data from CSV
+    current_dir = Path(__file__).parent  # Gets directory where this script lives
+    data_path = current_dir / "artifacts" / "Online_Courses.csv"
     try:
-        __df = pd.read_csv("./artifacts/Online_courses.csv")
+        __df = pd.read_csv(data_path)
         print(f"Successfully loaded course data from Online_courses.csv.")
 
         # Clean the 'Skills' column: remove NaN and empty strings
@@ -199,14 +202,15 @@ def compare_skills():
     }
 
     return jsonify(response), 200
+
 @app.route('/status', methods=['GET'])
 def status():
     """Check if models and data are loaded."""
     status = {
-        'skills_loaded': bool(__skills),
-        'model_loaded': bool(__model),
-        'vectorizer_loaded': bool(__vectorizer),
-        'course_data_loaded': bool(__df) and not __df.empty,
+        'skills_loaded': __skills is not None,
+        'model_loaded': __model is not None,
+        'vectorizer_loaded': __vectorizer is not None,
+        'course_data_loaded': __df is not None and not __df.empty  # ← Correct check
     }
     return jsonify(status)
 
