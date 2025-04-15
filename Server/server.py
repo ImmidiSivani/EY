@@ -9,7 +9,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 from flask_cors import CORS  # Import CORS
 
 app = Flask(__name__)
-CORS(app,origins=["https://ey-1-0shs.onrender.com"])
+CORS(app,origins=["http://localhost:3000","https://ey-1-0shs.onrender.com"])
 
 # Initialize global variables
 __skills = None
@@ -199,6 +199,17 @@ def compare_skills():
     }
 
     return jsonify(response), 200
+@app.route('/status', methods=['GET'])
+def status():
+    """Check if models and data are loaded."""
+    status = {
+        'skills_loaded': bool(__skills),
+        'model_loaded': bool(__model),
+        'vectorizer_loaded': bool(__vectorizer),
+        'course_data_loaded': bool(__df) and not __df.empty,
+    }
+    return jsonify(status)
+
 load_saved_skills()
 if __name__ == '__main__':
     # Load skills and course data from the JSON, pickle files, and CSV
