@@ -16,14 +16,25 @@ from groq import Groq
 app = Flask(__name__)
 CORS(app,origins=["https://ey-1-0shs.onrender.com"])
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-ENV_PATH = os.path.join(BASE_DIR, '..', 'Backend', '.env')
-load_dotenv(dotenv_path=ENV_PATH, override=True)
-api_key = os.getenv("GROQ_API_KEY") 
-if not api_key:
+# BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+# ENV_PATH = os.path.join(BASE_DIR, '..', 'Backend', '.env')
+# load_dotenv(dotenv_path=ENV_PATH, override=True)
+# api_key = os.getenv("GROQ_API_KEY") 
+# if not api_key:
+#     raise ValueError("GROQ_API_KEY not found in environment variables!")
+
+# client = Groq(api_key=api_key)
+
+
+# Load .env only in development (not in production)
+if os.getenv("RENDER") != "true":  # Render sets this automatically
+    load_dotenv()
+
+GROQ_API_KEY = os.getenv("GROQ_API_KEY")
+if not GROQ_API_KEY:
     raise ValueError("GROQ_API_KEY not found in environment variables!")
 
-client = Groq(api_key=api_key)
+client = Groq(api_key=GROQ_API_KEY)
 
 
 
