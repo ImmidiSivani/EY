@@ -9,32 +9,11 @@ from sklearn.metrics.pairwise import cosine_similarity
 from flask_cors import CORS  # Import CORS
 from pathlib import Path
 
-from dotenv import load_dotenv
-from groq import Groq
-
 
 app = Flask(__name__)
 CORS(app,origins=["https://ey-1-0shs.onrender.com"])
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-ENV_PATH = os.path.join(BASE_DIR, '..', 'Backend', '.env')
-load_dotenv(dotenv_path=ENV_PATH, override=True)
-# api_key = os.getenv("GROQ_API_KEY") 
-# if not api_key:
-#     raise ValueError("GROQ_API_KEY not found in environment variables!")
 
-# client = Groq(api_key=api_key)
-
-
-# Load .env only in development (not in production)
-if os.getenv("RENDER") != "true":  # Render sets this automatically
-    load_dotenv()
-
-GROQ_API_KEY = os.getenv("GROQ_API_KEY")
-if not GROQ_API_KEY:
-    raise ValueError("GROQ_API_KEY not found in environment variables!")
-
-client = Groq(api_key=GROQ_API_KEY)
 
 
 
@@ -239,64 +218,7 @@ def status():
         'course_data_loaded': __df is not None and not __df.empty  # ← Correct check
     }
     return jsonify(status)
-@app.route('/generate_quiz', methods=['POST'])
-def generate_quiz():
-    try:
-        data = request.get_json()
-        topic = data.get('topic', '')
-        difficulty = data.get('difficulty', 'medium')
-        num_questions = data.get('num_questions', 5)
 
-        if not topic:
-            return jsonify({'error': 'Topic is required'}), 400
-
-        prompt = f"""
-        Generate a {difficulty} difficulty quiz about {topic} with {num_questions} MCQs.
-        Respond with a JSON object with this format:
-
-        {{
-          "questions": [
-            {{
-              "question": "What is Python used for?",
-              "options": {{
-                "a": "Web development",
-                "b": "Data analysis",
-                "c": "Machine learning",
-                "d": "All of the above"
-              }},
-              "answer": "d",
-              "explanation": "Python is used in all of these areas."
-            }}
-          ]
-        }}
-        Respond with only valid JSON, without any markdown or extra text.
-        """
-
-        response = client.chat.completions.create(
-            messages=[{"role": "user", "content": prompt}],
-            model="deepseek-r1-distill-llama-70b",
-            temperature=0.7,
-            max_tokens=2000,
-            response_format={"type": "json_object"}
-        )
-
-        content = response.choices[0].message.content.strip()
-
-        # Remove markdown fences if any
-        if content.startswith("```json"):
-            content = content[len("```json"):].strip()
-        if content.endswith("```"):
-            content = content[:-3].strip()
-
-        quiz_data = json.loads(content)
-
-        # Return the actual questions list, not the full object
-        return jsonify({'questions': quiz_data['questions']})
-
-    except json.JSONDecodeError as e:
-        return jsonify({'error': 'Failed to parse quiz questions', 'details': str(e)}), 500
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
 
 load_saved_skills()
 if __name__ == '__main__':
